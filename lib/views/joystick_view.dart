@@ -1,4 +1,5 @@
 import 'dart:math' as _math;
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -56,6 +57,7 @@ class JoystickView extends StatelessWidget {
   ///
   /// Defaults to [true]
   final bool showArrows;
+  Timer panDownPeriodicTimer;
 
   JoystickView(
       {this.size,
@@ -103,12 +105,32 @@ class JoystickView extends StatelessWidget {
           );
 
           return GestureDetector(
+            //Donny adds some callbacks for the test perpose.
+            onPanDown: (details){
+              print('donny:'+details.toString());
+              // final int millis = interval.inMilliseconds;
+              print('donny:Timer here');
+              panDownPeriodicTimer = new Timer.periodic(const Duration(milliseconds:20/*sync with 50hz*/), (Timer t) {
+                _callbackTimestamp = _processGesture(actualSize, actualSize / 2, details.localPosition, _callbackTimestamp);
+                // setState(() => lastPosition = details.localPosition);
+              });
+            },
+            //do not use belows
+            /*onPanDown: (details){              print('donny:onPanDown');            },
+            onPanCancel: (){ //The pointer that previously triggered onPanDown did not complete.
+              print('donny:onPanCancel');            },
+            onTapUp: (details){              print('donny:onTapUp');            },
+            onTapCancel: (){              print('donny:onTapCancel');            },*/
             onPanStart: (details) {
               _callbackTimestamp = _processGesture(actualSize, actualSize / 2,
                   details.localPosition, _callbackTimestamp);
               setState(() => lastPosition = details.localPosition);
             },
             onPanEnd: (details) {
+              print('donny:'+details.toString());
+              if(panDownPeriodicTimer!=null && panDownPeriodicTimer.isActive){
+                panDownPeriodicTimer.cancel();
+              }
               _callbackTimestamp = null;
               if (onDirectionChanged != null) {
                 onDirectionChanged(0, 0);
