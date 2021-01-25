@@ -130,6 +130,7 @@ class JoystickView extends StatelessWidget {
               print('donny:'+details.toString());
               if(panDownPeriodicTimer!=null && panDownPeriodicTimer.isActive){
                 panDownPeriodicTimer.cancel();
+                panDownPeriodicTimer=null;
               }
               _callbackTimestamp = null;
               if (onDirectionChanged != null) {
