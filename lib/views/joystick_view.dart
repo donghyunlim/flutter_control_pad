@@ -57,7 +57,9 @@ class JoystickView extends StatelessWidget {
   ///
   /// Defaults to [true]
   final bool showArrows;
-  Timer panDownPeriodicTimer;
+  bool isPanLongPressed;
+  // Offset panLastPosition;
+  // Timer panDownPeriodicTimer;
 
   JoystickView(
       {this.size,
@@ -105,15 +107,32 @@ class JoystickView extends StatelessWidget {
           );
 
           return GestureDetector(
-            //Donny adds some callbacks for the test perpose.
+            //Donny adds some callbacks for the test purpose.
+            //   print('update?');
+            onLongPressStart: (details) {
+              /*isPanLongPressed = true;*/
+              /*print(
+                  'donny:' + "panlp"); //DragDownDetails(Offset(123.0,123.0))
+              if(!isPanLongPressed) {
+                panLastPosition = details.localPosition;
+              }
+              panDownPeriodicTimer = new Timer.periodic(const Duration(milliseconds:500*//*sync with 50hz*//*), (Timer t) {
+                isPanLongPressed = true;
+
+                _callbackTimestamp = _processGesture(actualSize, actualSize / 2, panLastPosition*//*details.localPosition*//*, _callbackTimestamp);
+                *//*joystickInnerPosition = _calculatePositionOfInnerCircle(
+                    lastPosition,
+                    innerCircleSize,
+                    actualSize,
+                    details.localPosition);
+                setState(() => lastPosition = details.localPosition);*//*
+              });*/
+            },
             onPanDown: (details){
-              print('donny:'+details.toString());
-              // final int millis = interval.inMilliseconds;
-              print('donny:Timer here');
-              panDownPeriodicTimer = new Timer.periodic(const Duration(milliseconds:20/*sync with 50hz*/), (Timer t) {
-                _callbackTimestamp = _processGesture(actualSize, actualSize / 2, details.localPosition, _callbackTimestamp);
-                // setState(() => lastPosition = details.localPosition);
-              });
+              isPanLongPressed = true;
+              print('donny:'+"pandown"); //DragDownDetails(Offset(123.0,123.0))
+              // print('donny:'+details.localPosition.toString());
+              // print('donny:'+details.globalPosition.toString());
             },
             //do not use belows
             /*onPanDown: (details){              print('donny:onPanDown');            },
@@ -121,17 +140,19 @@ class JoystickView extends StatelessWidget {
               print('donny:onPanCancel');            },
             onTapUp: (details){              print('donny:onTapUp');            },
             onTapCancel: (){              print('donny:onTapCancel');            },*/
-            onPanStart: (details) {
+            onPanStart: (details) {//누르기 시작
               _callbackTimestamp = _processGesture(actualSize, actualSize / 2,
                   details.localPosition, _callbackTimestamp);
               setState(() => lastPosition = details.localPosition);
             },
             onPanEnd: (details) {
-              print('donny:'+details.toString());
-              if(panDownPeriodicTimer!=null && panDownPeriodicTimer.isActive){
+              // print('donny:'+"panend");
+              isPanLongPressed = false;
+              /*if(panDownPeriodicTimer!=null && panDownPeriodicTimer.isActive){
                 panDownPeriodicTimer.cancel();
                 panDownPeriodicTimer=null;
-              }
+              }*/
+
               _callbackTimestamp = null;
               if (onDirectionChanged != null) {
                 onDirectionChanged(0, 0);
@@ -144,16 +165,17 @@ class JoystickView extends StatelessWidget {
               setState(() =>
                   lastPosition = Offset(innerCircleSize, innerCircleSize));
             },
-            onPanUpdate: (details) {
-              _callbackTimestamp = _processGesture(actualSize, actualSize / 2,
-                  details.localPosition, _callbackTimestamp);
-              joystickInnerPosition = _calculatePositionOfInnerCircle(
-                  lastPosition,
-                  innerCircleSize,
-                  actualSize,
-                  details.localPosition);
-
-              setState(() => lastPosition = details.localPosition);
+            onPanUpdate: (details) {//지속적으로 업데이트 콜백, 주기는 불안정함.
+              print("polling rate:panup");
+              // if(!isPanLongPressed) {
+                _callbackTimestamp = _processGesture(actualSize, actualSize / 2, details.localPosition, _callbackTimestamp);
+                joystickInnerPosition = _calculatePositionOfInnerCircle(
+                    lastPosition,
+                    innerCircleSize,
+                    actualSize,
+                    details.localPosition);
+                setState(() => lastPosition = details.localPosition);
+              // }
             },
             child: (opacity != null)
                 ? Opacity(opacity: opacity, child: joystick)
@@ -224,12 +246,11 @@ class JoystickView extends StatelessWidget {
     double normalizedDistance = _math.min(distance / (size / 2), 1.0);
 
     DateTime _callbackTimestamp = callbackTimestamp;
-    if (onDirectionChanged != null &&
-        _canCallOnDirectionChanged(callbackTimestamp)) {
+    if ( onDirectionChanged!=null &&
+        ( _canCallOnDirectionChanged(callbackTimestamp)||isPanLongPressed) ) {
       _callbackTimestamp = DateTime.now();
       onDirectionChanged(degrees, normalizedDistance);
     }
-
     return _callbackTimestamp;
   }
 
