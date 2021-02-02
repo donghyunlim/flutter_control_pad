@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'circle_view.dart';
 
 typedef JoystickDirectionCallback = void Function(
-    double degrees, double distance);
+    double degrees, double distance, double deltaX, double deltaY);
 
 class JoystickView extends StatelessWidget {
   /// The size of the joystick.
@@ -155,7 +155,7 @@ class JoystickView extends StatelessWidget {
 
               _callbackTimestamp = null;
               if (onDirectionChanged != null) {
-                onDirectionChanged(0, 0);
+                onDirectionChanged(0, 0, 0, 0);
               }
               joystickInnerPosition = _calculatePositionOfInnerCircle(
                   Offset(innerCircleSize, innerCircleSize),
@@ -249,7 +249,7 @@ class JoystickView extends StatelessWidget {
     if ( onDirectionChanged!=null &&
         ( _canCallOnDirectionChanged(callbackTimestamp)||isPanLongPressed) ) {
       _callbackTimestamp = DateTime.now();
-      onDirectionChanged(degrees, normalizedDistance);
+      onDirectionChanged(degrees, normalizedDistance, dx, dy);
     }
     return _callbackTimestamp;
   }
