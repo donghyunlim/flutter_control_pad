@@ -109,7 +109,7 @@ class JoystickView extends StatelessWidget {
           return GestureDetector(
             //Donny adds some callbacks for the test purpose.
             //   print('update?');
-            onLongPressStart: (details) {
+            // onLongPressStart: (details) {
               /*isPanLongPressed = true;*/
               /*print(
                   'donny:' + "panlp"); //DragDownDetails(Offset(123.0,123.0))
@@ -127,7 +127,7 @@ class JoystickView extends StatelessWidget {
                     details.localPosition);
                 setState(() => lastPosition = details.localPosition);*//*
               });*/
-            },
+            // },
             onPanDown: (details){
               isPanLongPressed = true;
               print('donny:'+"pandown"); //DragDownDetails(Offset(123.0,123.0))
