@@ -166,7 +166,7 @@ class JoystickView extends StatelessWidget {
                   lastPosition = Offset(innerCircleSize, innerCircleSize));
             },
             onPanUpdate: (details) {//지속적으로 업데이트 콜백, 주기는 불안정함.
-              print("polling rate:panup");
+              // print("polling rate:panup");
               // if(!isPanLongPressed) {
                 _callbackTimestamp = _processGesture(actualSize, actualSize / 2, details.localPosition, _callbackTimestamp);
                 joystickInnerPosition = _calculatePositionOfInnerCircle(
