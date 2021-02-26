@@ -128,6 +128,9 @@ class JoystickView extends StatelessWidget {
                 setState(() => lastPosition = details.localPosition);*//*
               });*/
             // },
+            onTapUp: (details){
+              return; //if up, does not anything.
+            },
             onPanDown: (details){
               isPanLongPressed = true;
               print('donny:'+"pandown"); //DragDownDetails(Offset(123.0,123.0))
