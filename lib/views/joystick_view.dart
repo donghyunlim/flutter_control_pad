@@ -150,7 +150,7 @@ class JoystickView extends StatelessWidget {
               setState(() => lastPosition = details.localPosition);
             },
             onPanEnd: (details) {
-              // print('donny:'+"panend");
+              print('donny:'+"panend");
               isPanLongPressed = false;
               /*if(panDownPeriodicTimer!=null && panDownPeriodicTimer.isActive){
                 panDownPeriodicTimer.cancel();
