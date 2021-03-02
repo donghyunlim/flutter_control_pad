@@ -129,6 +129,7 @@ class JoystickView extends StatelessWidget {
               });*/
             // },
             onTapUp: (details){
+              print('donny:'+"tapup");
               return; //if up, does not anything.
             },
             onPanDown: (details){
