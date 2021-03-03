@@ -8,6 +8,7 @@ import 'circle_view.dart';
 
 typedef JoystickDirectionCallback = void Function(
     double degrees, double distance, double deltaX, double deltaY);
+typedef JoystickHandOffCallback = void Function();
 
 class JoystickView extends StatelessWidget {
   /// The size of the joystick.
@@ -42,6 +43,7 @@ class JoystickView extends StatelessWidget {
   ///
   /// Defaults to [null]
   final JoystickDirectionCallback onDirectionChanged;
+  final JoystickHandOffCallback onLongPressEnd;
 
   /// Indicates how often the [onDirectionChanged] should be called.
   ///
@@ -68,6 +70,7 @@ class JoystickView extends StatelessWidget {
       this.innerCircleColor = Colors.blueGrey,
       this.opacity,
       this.onDirectionChanged,
+      this.onLongPressEnd,
       this.interval,
       this.showArrows = true});
 
@@ -150,13 +153,14 @@ class JoystickView extends StatelessWidget {
               setState(() => lastPosition = details.localPosition);
             },
             onPanEnd: (details) {
-              print('donny:'+"panend");
+              // print('donny:'+"panend");
+              onLongPressEnd();
               isPanLongPressed = false;
               /*if(panDownPeriodicTimer!=null && panDownPeriodicTimer.isActive){
                 panDownPeriodicTimer.cancel();
                 panDownPeriodicTimer=null;
               }*/
-
+              // _callbackTimestamp=_processGesture(actualSize, actualSize / 2, Offset(innerCircleSize,innerCircleSize), _callbackTimestamp);
               _callbackTimestamp = null;
               if (onDirectionChanged != null) {
                 onDirectionChanged(0, 0, 0, 0);
